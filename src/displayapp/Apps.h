@@ -18,6 +18,8 @@ namespace Pinetime {
       Music,
       Paint,
       Paddle,
+      Bird,
+      Snake,
       Twos,
       HeartRate,
       Navigation,

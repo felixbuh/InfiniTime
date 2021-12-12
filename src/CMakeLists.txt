@@ -407,6 +407,9 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Meter.cpp
         displayapp/screens/InfiniPaint.cpp
         displayapp/screens/Paddle.cpp
+        displayapp/screens/Bird.cpp
+        displayapp/screens/Pipe.cpp
+        displayapp/screens/Snake.cpp
         displayapp/screens/StopWatch.cpp
         displayapp/screens/BatteryIcon.cpp
         displayapp/screens/BleIcon.cpp
@@ -624,6 +627,9 @@ set(INCLUDE_FILES
         displayapp/screens/InfiniPaint.h
         displayapp/screens/StopWatch.h
         displayapp/screens/Paddle.h
+        displayapp/screens/Bird.h
+        displayapp/screens/Pipe.h
+        displayapp/screens/Snake.h
         displayapp/screens/DropDownDemo.h
         displayapp/screens/BatteryIcon.h
         displayapp/screens/BleIcon.h

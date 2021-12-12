@@ -17,6 +17,8 @@
 #include "displayapp/screens/FirmwareValidation.h"
 #include "displayapp/screens/InfiniPaint.h"
 #include "displayapp/screens/Paddle.h"
+#include "displayapp/screens/Bird.h"
+#include "displayapp/screens/Snake.h"
 #include "displayapp/screens/StopWatch.h"
 #include "displayapp/screens/Meter.h"
 #include "displayapp/screens/Metronome.h"
@@ -443,6 +445,12 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       break;
     case Apps::Paddle:
       currentScreen = std::make_unique<Screens::Paddle>(this, lvgl);
+      break;
+    case Apps::Bird:
+      currentScreen = std::make_unique<Screens::Bird>(this, lvgl);
+      break;
+    case Apps::Snake:
+      currentScreen = std::make_unique<Screens::Snake>(this, lvgl);
       break;
     case Apps::Music:
       currentScreen = std::make_unique<Screens::Music>(this, systemTask->nimble().music());
