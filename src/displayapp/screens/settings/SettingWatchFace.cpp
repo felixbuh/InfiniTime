@@ -4,8 +4,8 @@
 #include "displayapp/screens/CheckboxList.h"
 #include "displayapp/screens/Screen.h"
 #include "components/settings/Settings.h"
-#include "displayapp/screens/WatchFaceInfineat.h"
-#include "displayapp/screens/WatchFaceCasioStyleG7710.h"
+//#include "displayapp/screens/WatchFaceInfineat.h"
+//#include "displayapp/screens/WatchFaceCasioStyleG7710.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -39,7 +39,8 @@ bool SettingWatchFace::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 
 std::unique_ptr<Screen> SettingWatchFace::CreateScreen1() {
   std::array<Screens::CheckboxList::Item, 4> watchfaces {
-    {{"Digital face", true}, {"Analog face", true}, {"PineTimeStyle", true}, {"Terminal", true}}};
+    //{{"Digital face", true}, {"Analog face", true}, {"PineTimeStyle", true}, {"Terminal", true}}};
+    {{"Digital face", true}, {"Analog face", true}, {"PineTimeStyle", false}, {"Terminal", false}}};
   return std::make_unique<Screens::CheckboxList>(
     0,
     2,
@@ -56,8 +57,10 @@ std::unique_ptr<Screen> SettingWatchFace::CreateScreen1() {
 
 std::unique_ptr<Screen> SettingWatchFace::CreateScreen2() {
   std::array<Screens::CheckboxList::Item, 4> watchfaces {
-    {{"Infineat face", Applications::Screens::WatchFaceInfineat::IsAvailable(filesystem)},
-     {"Casio G7710", Applications::Screens::WatchFaceCasioStyleG7710::IsAvailable(filesystem)},
+    //{{"Infineat face", Applications::Screens::WatchFaceInfineat::IsAvailable(filesystem)},
+    // {"Casio G7710", Applications::Screens::WatchFaceCasioStyleG7710::IsAvailable(filesystem)},
+    {{"Infineat face", false},
+     {"Casio G7710", false},
      {"", false},
      {"", false}}};
   return std::make_unique<Screens::CheckboxList>(
