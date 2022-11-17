@@ -1,3 +1,28 @@
+## InfiniTime 中文支援
+PineTime 現在也可以顯示中文了！  
+這個 InfiniTime 版本增加了 2500 個精選常用正體中文字，注音符號與日文假名，以提供台灣使用者最佳的顯示體驗。  
+安裝了本版本後將可顯示約 98% 日常用語。而超過 2500 字的部份，則可搭配 https://github.com/Boteium/GadgetBridge 來做相似字替換，或注音替換 (也就是會有 2% 的錯別字或注音文)  
+
+因為中文字必須佔用很大的儲存空間，本版本移除了下列功能
+- 天氣 (還沒有錶面支援顯示)  
+- 導航 (GadgetBridge 不支援)  
+- 加速感應器 (僅移除 app. 仍可透過藍芽讀取)  
+- Two (類似 2048 的遊戲)  
+- 錶面: Casio, InfiniTime, PineTime, Terminal (這幾個很佔空間)  
+
+<img src="https://raw.githubusercontent.com/Boteium/InfiniTime/develop/readme_img/call_demo.jpg" width="30%" align="left">
+<img src="https://raw.githubusercontent.com/Boteium/InfiniTime/develop/readme_img/music_demo.jpg" width="30%" align="left">
+<img src="https://raw.githubusercontent.com/Boteium/InfiniTime/develop/readme_img/notification_demo.jpg" width="30%" align="left">
+
+## Infinitime Traditional Chinese fork
+This forks adds about 2500 Traditional Chinese characters, bopomofo, and Japanese kana for Taiwanese user.  
+Due to the space limit. The following apps are **removed**.  
+- Weather (not yet integrated with watchface)  
+- Navigation (no GadgetBridge support)  
+- Motion (only remove app. bluetooth backgroud service is still preserved)  
+- Two (games)  
+- WatchFace: Casio, InfiniTime, PineTime, Terminal (because they takes a lots of space)  
+
 # [InfiniTime](https://github.com/InfiniTimeOrg/InfiniTime)
 
 [![Build PineTime Firmware](https://github.com/InfiniTimeOrg/InfiniTime/workflows/Build%20PineTime%20Firmware/badge.svg?branch=master)](https://github.com/InfiniTimeOrg/InfiniTime/actions)
