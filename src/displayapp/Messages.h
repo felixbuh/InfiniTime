@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+
 namespace Pinetime {
   namespace Applications {
     namespace Display {
@@ -16,11 +17,13 @@ namespace Pinetime {
         NewNotification,
         TimerDone,
         BleFirmwareUpdateStarted,
-        UpdateTimeOut,
         DimScreen,
         RestoreBrightness,
         ShowPairingKey,
-        AlarmTriggered
+        AlarmTriggered,
+        Chime,
+        BleRadioEnableToggle,
+        OnChargingEvent,
       };
     }
   }
