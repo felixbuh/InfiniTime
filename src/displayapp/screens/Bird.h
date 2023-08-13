@@ -6,14 +6,11 @@
 #include "displayapp/screens/Pipe.h"
 
 namespace Pinetime {
-  namespace Components {
-    class LittleVgl;
-  }
   namespace Applications {
     namespace Screens {
       class Bird : public Screen {
       public:
-        Bird(DisplayApp* app, Pinetime::Components::LittleVgl& lvgl);
+        Bird();
         ~Bird() override;
 
         void OnEvent(lv_obj_t* obj, lv_event_t event);
@@ -22,8 +19,6 @@ namespace Pinetime {
         void WaitForRestart();
 
       private:
-        Pinetime::Components::LittleVgl& lvgl;
-
         uint16_t score = 0;
         int16_t birdY = 0; // Bird center
         const uint8_t birdX = 30;

@@ -11,7 +11,7 @@ static void event_handler(lv_obj_t* obj, lv_event_t event) {
   screen->OnEvent(obj, event);
 }
 
-Bird::Bird(Pinetime::Applications::DisplayApp* app, Pinetime::Components::LittleVgl& lvgl) : Screen(app), lvgl {lvgl} {
+Bird::Bird() {
   background = lv_obj_create(lv_scr_act(), nullptr);
   lv_obj_set_size(background, LV_HOR_RES + 1, LV_VER_RES);
   lv_obj_set_pos(background, -1, 0);
@@ -42,10 +42,14 @@ Bird::~Bird() {
 }
 
 void Bird::OnEvent(lv_obj_t* obj, lv_event_t event) {
+  (void)obj;
+  (void)event;
   restarted = true;
 }
 
 bool Bird::OnTouchEvent(uint16_t x, uint16_t y) {
+  (void)x;
+  (void)y;
   acceleration -= 1;
   return true;
 }

@@ -6,14 +6,11 @@
 #include "displayapp/screens/Screen.h"
 
 namespace Pinetime {
-  namespace Components {
-    class LittleVgl;
-  }
   namespace Applications {
     namespace Screens {
       class Snake : public Screen {
       public:
-        Snake(DisplayApp* app, Pinetime::Components::LittleVgl& lvgl);
+        Snake();
         ~Snake() override;
 
         void OnEvent(lv_obj_t* obj, lv_event_t event);
@@ -29,8 +26,6 @@ namespace Pinetime {
         void WaitForRestart();
 
       private:
-        Pinetime::Components::LittleVgl& lvgl;
-
         const uint8_t scale = 15;
         int16_t SnakeX = 120;
         int16_t SnakeY = 120;
