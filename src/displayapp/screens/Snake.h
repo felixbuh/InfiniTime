@@ -26,23 +26,25 @@ namespace Pinetime {
         void WaitForRestart();
 
       private:
+        uint16_t score = 0;
         const uint8_t scale = 15;
-        int16_t SnakeX = 120;
-        int16_t SnakeY = 120;
-        int8_t SpeedX = 1;
-        int8_t SpeedY = 0;
+        int16_t snakeX = 120;
+        int16_t snakeY = 120;
+        int8_t speedX = 1;
+        int8_t speedY = 0;
         uint8_t direction = 0;
         uint8_t tickCounter = 0;
-        std::deque<std::pair<int, int>> History;
+        std::deque<std::pair<int, int>> history;
 
-        uint8_t FoodX;
-        uint8_t FoodY;
+        uint8_t foodX;
+        uint8_t foodY;
 
         bool hit = false;
         bool restarted = false;
         bool restartBtnActive = false;
 
         std::deque<lv_obj_t*> snake;
+        lv_obj_t* points;
         lv_obj_t* tail;
         lv_obj_t* food;
         lv_obj_t* background;

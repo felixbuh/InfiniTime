@@ -2,6 +2,7 @@
 
 #include <lvgl/lvgl.h>
 #include <cstdint>
+#include <memory>
 #include "displayapp/screens/Screen.h"
 #include "displayapp/screens/Pipe.h"
 
@@ -21,14 +22,18 @@ namespace Pinetime {
       private:
         uint16_t score = 0;
         int16_t birdY = 0; // Bird center
-        const uint8_t birdX = 30;
-        const uint8_t birdSize = 16;
-
-        Pipe* pipes[2];
-
+        static constexpr uint8_t birdX = 30;
+        static constexpr uint8_t birdSize = 16;
+        static constexpr uint8_t numberOfPipes = 2;
+        static constexpr int screenSize = 240;
+        static constexpr int pipeStartPosition = 370;
+        static constexpr float gravity = 0.5;
+        static constexpr float maxVelocity = 4;
+        static constexpr float minVelocity = -6;
         float velocity = 0;
         float acceleration = 0;
-        float gravity = 0.5;
+
+        std::unique_ptr<Pipe> pipes[numberOfPipes];
 
         bool hit = false;
         bool restarted = false;
