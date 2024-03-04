@@ -192,6 +192,7 @@ void Snake::WaitForRestart() {
     speedX = 1;
     speedY = 0;
     direction = 0;
+    score = 0;
     Clear();
     history.push_back({snakeX, snakeY});
     AddElement();

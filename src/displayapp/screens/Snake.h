@@ -1,9 +1,13 @@
 #pragma once
 
+#include "displayapp/apps/Apps.h"
+#include "displayapp/screens/Screen.h"
+#include "displayapp/Controllers.h"
+#include "Symbols.h"
+
 #include <lvgl/lvgl.h>
 #include <cstdint>
 #include <deque>
-#include "displayapp/screens/Screen.h"
 
 namespace Pinetime {
   namespace Applications {
@@ -53,5 +57,14 @@ namespace Pinetime {
         lv_task_t* taskRefresh;
       };
     }
+  
+    template <>
+    struct AppTraits<Apps::Snake> {
+      static constexpr Apps app = Apps::Snake;
+      static constexpr const char* icon = Screens::Symbols::snake;
+      static Screens::Screen* Create(AppControllers& controllers) {
+        return new Screens::Snake();
+      };
+    };
   }
 }
