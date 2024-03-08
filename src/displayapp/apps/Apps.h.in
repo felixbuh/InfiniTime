@@ -27,6 +27,8 @@ namespace Pinetime {
       Metronome,
       Motion,
       Steps,
+      Bird,
+      Snake,
       Dice,
       Weather,
       PassKey,
