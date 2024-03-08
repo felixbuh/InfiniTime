@@ -27,6 +27,7 @@ Bird::Bird() {
   lv_obj_set_style_local_bg_color(bird, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
   lv_obj_set_style_local_radius(bird, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_RADIUS_CIRCLE);
   lv_obj_set_size(bird, birdSize, birdSize);
+  lv_obj_set_pos(bird, birdX, birdY);
 
   pipes[0] = std::make_unique<Pipe>(screenSize);
   pipes[1] = std::make_unique<Pipe>(pipeStartPosition);
@@ -56,7 +57,15 @@ void Bird::Refresh() {
   if (!hit) {
     restarted = false;
 
-    acceleration += gravity;
+    // add gravity every second run
+    if (addGravity) {
+      acceleration += gravity;
+      addGravity = false;
+    }
+    else {
+      addGravity = true;
+    }
+      
     birdY += velocity;
     velocity += acceleration;
     if (velocity > maxVelocity) {
@@ -75,7 +84,7 @@ void Bird::Refresh() {
       hit = true;
     }
 
-    lv_obj_set_pos(bird, birdX, birdY);
+    lv_obj_set_y(bird, birdY);
 
     for (int i = 0; i < numberOfPipes; i++) {
       if (pipes[i]->Hits(birdX, birdY, birdSize)) {

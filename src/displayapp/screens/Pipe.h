@@ -10,7 +10,6 @@ public:
   Pipe() : Pipe(240) {};
   ~Pipe();
 
-  void Randomize();
   bool Hits(uint8_t birdX, int16_t birdY, uint8_t birdSize);
   void MovePipe();
   void UpdatePipe();
@@ -18,6 +17,8 @@ public:
   void Reset(int pos);
 
 private:
+  void Randomize();
+
   bool hit = false;
   uint8_t spacePosition;
   static constexpr uint8_t spaceSize = 70;

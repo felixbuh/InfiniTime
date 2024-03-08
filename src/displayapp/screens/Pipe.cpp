@@ -11,11 +11,13 @@ Pipe::Pipe(int initialX) : pipeX(initialX) {
   lv_obj_set_style_local_bg_color(topPipe, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
   lv_obj_set_style_local_radius(topPipe, 0, LV_BTN_PART_MAIN, LV_STATE_DEFAULT);
   lv_obj_set_size(topPipe, pipeW, pipeTop);
+  lv_obj_set_pos(topPipe, pipeX, 0);
 
   bottomPipe = lv_obj_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_bg_color(bottomPipe, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
   lv_obj_set_style_local_radius(bottomPipe, 0, LV_BTN_PART_MAIN, LV_STATE_DEFAULT);
   lv_obj_set_size(bottomPipe, pipeW, pipeBottom);
+  lv_obj_set_pos(bottomPipe, pipeX, screenSize - pipeBottom);
 }
 
 Pipe::~Pipe() {
@@ -23,17 +25,12 @@ Pipe::~Pipe() {
   lv_obj_del(bottomPipe);
 }
 
-void Pipe::Randomize() {
-  spacePosition = rand() % (screenSize - 2 * spaceSize - 10) + spaceSize + 10;
-  pipeTop = spacePosition - spaceSize;
-  pipeBottom = screenSize - spacePosition - spaceSize;
-}
-
 bool Pipe::Hits(uint8_t birdX, int16_t birdY, uint8_t birdSize) {
-  if ((birdX > pipeX) && (birdX < (pipeX + pipeW)) &&
-      (((birdY < (pipeTop + birdSize)) || (birdY > (screenSize - pipeBottom - birdSize))))) {
-    hit = true;
-    return true;
+  if (birdX > pipeX && birdX < (pipeX + pipeW)) {
+    	if (birdY < (pipeTop + birdSize) || birdY > (screenSize - pipeBottom - birdSize)) {
+        hit = true;
+        return true;
+    }
   }
   return false;
 }
@@ -43,12 +40,13 @@ void Pipe::MovePipe() {
 }
 
 void Pipe::UpdatePipe() {
-  lv_color_t pipeColor = hit ? LV_COLOR_ORANGE : LV_COLOR_WHITE;
-  lv_obj_set_style_local_bg_color(topPipe, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, pipeColor);
-  lv_obj_set_style_local_bg_color(bottomPipe, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, pipeColor);
+  if (hit) {
+    lv_obj_set_style_local_bg_color(topPipe, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_ORANGE);
+    lv_obj_set_style_local_bg_color(bottomPipe, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_ORANGE);
+  }
 
-  lv_obj_set_pos(topPipe, pipeX, 0);
-  lv_obj_set_pos(bottomPipe, pipeX, screenSize - pipeBottom);
+  lv_obj_set_x(topPipe, pipeX);
+  lv_obj_set_x(bottomPipe, pipeX);
 }
 
 bool Pipe::OutOfScreen() {
@@ -56,9 +54,22 @@ bool Pipe::OutOfScreen() {
 }
 
 void Pipe::Reset(int pos) {
-  hit = false;
+  if (hit) {
+    lv_obj_set_style_local_bg_color(topPipe, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+    lv_obj_set_style_local_bg_color(bottomPipe, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+    hit = false;
+  }
+
   pipeX = pos;
   Randomize();
-  lv_obj_set_size(topPipe, pipeW, pipeTop);
-  lv_obj_set_size(bottomPipe, pipeW, pipeBottom);
+  lv_obj_set_height(topPipe, pipeTop);
+  lv_obj_set_pos(topPipe, pipeX, 0);
+  lv_obj_set_height(bottomPipe, pipeBottom);
+  lv_obj_set_pos(bottomPipe, pipeX, screenSize - pipeBottom);
+}
+
+void Pipe::Randomize() {
+  spacePosition = rand() % (screenSize - 2 * spaceSize - 10) + spaceSize + 10;
+  pipeTop = spacePosition - spaceSize;
+  pipeBottom = screenSize - spacePosition - spaceSize;
 }
