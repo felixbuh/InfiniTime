@@ -149,12 +149,12 @@ void LittleVgl::SetFullRefresh(FullRefreshDirections direction) {
   fullRefresh = true;
 }
 
+bool LittleVgl::IsScrolling() {
+  return scrollDirection != LittleVgl::FullRefreshDirections::None;
+}
+
 void LittleVgl::FlushDisplay(const lv_area_t* area, lv_color_t* color_p) {
   uint16_t y1, y2, width, height = 0;
-
-  ulTaskNotifyTake(pdTRUE, 200);
-  // Notification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
-  // which cannot be set/clear during a transfer.
 
   if ((scrollDirection == LittleVgl::FullRefreshDirections::Down) && (area->y2 == visibleNbLines - 1)) {
     writeOffset = ((writeOffset + totalNbLines) - visibleNbLines) % totalNbLines;
@@ -219,7 +219,6 @@ void LittleVgl::FlushDisplay(const lv_area_t* area, lv_color_t* color_p) {
 
     if (height > 0) {
       lcd.DrawBuffer(area->x1, y1, width, height, reinterpret_cast<const uint8_t*>(color_p), width * height * 2);
-      ulTaskNotifyTake(pdTRUE, 100);
     }
 
     uint16_t pixOffset = width * height;
@@ -253,11 +252,20 @@ void LittleVgl::SetNewTouchPoint(int16_t x, int16_t y, bool contact) {
   }
 }
 
+// Cancel an ongoing tap
+// Signifies that LVGL should not handle the current tap
 void LittleVgl::CancelTap() {
   if (tapped) {
     isCancelled = true;
     touchPoint = {-1, -1};
   }
+}
+
+// Clear the current tapped state
+// Signifies that touch input processing is suspended
+void LittleVgl::ClearTouchState() {
+  touchPoint = {-1, -1};
+  tapped = false;
 }
 
 bool LittleVgl::GetTouchPadInfo(lv_indev_data_t* ptr) {
