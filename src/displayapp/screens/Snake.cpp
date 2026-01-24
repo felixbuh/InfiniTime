@@ -6,9 +6,13 @@
 
 using namespace Pinetime::Applications::Screens;
 
-static void event_handler(lv_obj_t* obj, lv_event_t event) {
-  Snake* screen = static_cast<Snake*>(obj->user_data);
-  screen->OnEvent(obj, event);
+namespace {
+  static void ResetEventHandler(lv_obj_t* obj, lv_event_t event) {
+    auto* snake = static_cast<Snake*>(obj->user_data);
+    if (event == LV_EVENT_CLICKED) {
+      snake->ResetBtnEventHandler(obj, event);
+    }
+  }
 }
 
 Snake::Snake() {
@@ -30,7 +34,7 @@ Snake::Snake() {
 
   SpawnFood();
 
-  taskRefresh = lv_task_create(RefreshTaskCallback, LV_DISP_DEF_REFR_PERIOD, LV_TASK_PRIO_MID, this);
+  taskRefresh = lv_task_create(RefreshTaskCallback, 15 * LV_DISP_DEF_REFR_PERIOD, LV_TASK_PRIO_MID, this);
 }
 
 Snake::~Snake() {
@@ -38,11 +42,8 @@ Snake::~Snake() {
   lv_obj_clean(lv_scr_act());
 }
 
-void Snake::OnEvent(lv_obj_t* obj, lv_event_t event) {
-  (void)event;
-  if (obj == restartButton) {
-    restarted = true;
-  }
+void Snake::ResetBtnEventHandler(lv_obj_t* /*obj*/, lv_event_t /*event*/) {
+  restarted = true;
 }
 
 bool Snake::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
@@ -86,23 +87,19 @@ void Snake::Refresh() {
     WaitForRestart();
   } else {
     restarted = false;
-    tickCounter++;
-    if (tickCounter > 15) {
-      tickCounter = 0;
-      snakeX = snakeX + speedX * scale;
-      snakeY = snakeY + speedY * scale;
-      if (Hits()) {
-        hit = true;
-      }
-      if (Eat()) {
-        history.push_back({snakeX, snakeY});
-        AddElement();
-        score++;
-      }
-      history.pop_front();
-      history.push_back({snakeX, snakeY});
-      Show();
+    snakeX = snakeX + speedX * scale;
+    snakeY = snakeY + speedY * scale;
+    if (Hits()) {
+      hit = true;
     }
+    if (Eat()) {
+      history.push_back({snakeX, snakeY});
+      AddElement();
+      score++;
+    }
+    history.pop_front();
+    history.push_back({snakeX, snakeY});
+    Show();
   }
 }
 
@@ -150,7 +147,7 @@ void Snake::SpawnFood() {
 }
 
 bool Snake::Eat() {
-  if ((snakeX == foodX) and (snakeY == foodY)) {
+  if ((snakeX == foodX) && (snakeY == foodY)) {
     SpawnFood();
     return true;
   }
@@ -172,7 +169,7 @@ void Snake::WaitForRestart() {
     lv_obj_align(points, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 10);
     restartButton = lv_btn_create(background, nullptr);
     restartButton->user_data = this;
-    lv_obj_set_event_cb(restartButton, event_handler);
+    lv_obj_set_event_cb(restartButton, ResetEventHandler);
     lv_obj_set_size(restartButton, 50, 50);
     lv_obj_align(restartButton, nullptr, LV_ALIGN_CENTER, 0, 0);
     txtRestart = lv_label_create(restartButton, nullptr);
@@ -186,7 +183,6 @@ void Snake::WaitForRestart() {
     SpawnFood();
     restartBtnActive = false;
     hit = false;
-    tickCounter = 0;
     snakeX = 120;
     snakeY = 120;
     speedX = 1;

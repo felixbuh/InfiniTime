@@ -17,8 +17,8 @@ namespace Pinetime {
         Snake();
         ~Snake() override;
 
-        void OnEvent(lv_obj_t* obj, lv_event_t event);
-        bool OnTouchEvent(Pinetime::Applications::TouchEvents event);
+        void ResetBtnEventHandler(lv_obj_t* obj, lv_event_t event);
+        bool OnTouchEvent(TouchEvents event) override;
         void Refresh() override;
         void Show();
         void Clear();
@@ -37,7 +37,6 @@ namespace Pinetime {
         int8_t speedX = 1;
         int8_t speedY = 0;
         uint8_t direction = 0;
-        uint8_t tickCounter = 0;
         std::deque<std::pair<int, int>> history;
 
         uint8_t foodX;
