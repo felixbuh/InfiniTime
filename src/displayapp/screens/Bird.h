@@ -18,8 +18,9 @@ namespace Pinetime {
         Bird();
         ~Bird() override;
 
-        void OnEvent(lv_obj_t* obj, lv_event_t event);
-        bool OnTouchEvent(uint16_t x, uint16_t y);
+        void RestartBtnEventHandler(lv_obj_t* obj, lv_event_t event);
+        bool OnTouchEvent(TouchEvents event) override;
+        bool OnTouchEvent(uint16_t x, uint16_t y) override;
         void Refresh() override;
 
       private:

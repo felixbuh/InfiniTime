@@ -6,9 +6,13 @@
 
 using namespace Pinetime::Applications::Screens;
 
-static void event_handler(lv_obj_t* obj, lv_event_t event) {
-  Bird* screen = static_cast<Bird*>(lv_obj_get_user_data(obj));
-  screen->OnEvent(obj, event);
+namespace {
+  static void RestartEventHandler(lv_obj_t* obj, lv_event_t event) {
+    auto* bird = static_cast<Bird*>(lv_obj_get_user_data(obj));
+    if (event == LV_EVENT_CLICKED) {
+      bird->RestartBtnEventHandler(obj, event);
+    }
+  }
 }
 
 Bird::Bird() {
@@ -40,15 +44,15 @@ Bird::~Bird() {
   lv_obj_clean(lv_scr_act());
 }
 
-void Bird::OnEvent(lv_obj_t* obj, lv_event_t event) {
-  (void) obj;
-  (void) event;
+void Bird::RestartBtnEventHandler(lv_obj_t* /*obj*/, lv_event_t /*event*/) {
   restarted = true;
 }
 
-bool Bird::OnTouchEvent(uint16_t x, uint16_t y) {
-  (void) x;
-  (void) y;
+bool Bird::OnTouchEvent(Pinetime::Applications::TouchEvents /*event*/) {
+  return true;
+}
+
+bool Bird::OnTouchEvent(uint16_t /*x*/, uint16_t /*y*/) {
   acceleration -= 1;
   return true;
 }
@@ -107,7 +111,7 @@ void Bird::Refresh() {
 void Bird::WaitForRestart() {
   if (!restartBtnActive) {
     restartButton = lv_btn_create(background, nullptr);
-    lv_obj_set_event_cb(restartButton, event_handler);
+    lv_obj_set_event_cb(restartButton, RestartEventHandler);
     lv_obj_set_size(restartButton, 50, 50);
     lv_obj_align(restartButton, nullptr, LV_ALIGN_CENTER, 0, 0);
     txtRestart = lv_label_create(restartButton, nullptr);
