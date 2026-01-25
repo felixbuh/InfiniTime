@@ -36,7 +36,7 @@ Bird::Bird() {
   pipes[0] = std::make_unique<Pipe>(screenSize);
   pipes[1] = std::make_unique<Pipe>(pipeStartPosition);
 
-  taskRefresh = lv_task_create(RefreshTaskCallback, LV_DISP_DEF_REFR_PERIOD, LV_TASK_PRIO_MID, this);
+  taskRefresh = lv_task_create(RefreshTaskCallback, 30, LV_TASK_PRIO_MID, this);
 }
 
 Bird::~Bird() {
@@ -49,11 +49,15 @@ void Bird::RestartBtnEventHandler(lv_obj_t* /*obj*/, lv_event_t /*event*/) {
 }
 
 bool Bird::OnTouchEvent(Pinetime::Applications::TouchEvents /*event*/) {
+  released = true;
   return true;
 }
 
 bool Bird::OnTouchEvent(uint16_t /*x*/, uint16_t /*y*/) {
-  acceleration -= 1;
+  if ((!hit) && released) {
+    velocity = maxVelocity;
+    released = false;
+  }
   return true;
 }
 
@@ -61,24 +65,11 @@ void Bird::Refresh() {
   if (!hit) {
     restarted = false;
 
-    // add gravity every second run
-    if (addGravity) {
-      acceleration += gravity;
-      addGravity = false;
-    }
-    else {
-      addGravity = true;
-    }
-      
-    birdY += velocity;
-    velocity += acceleration;
-    if (velocity > maxVelocity) {
-      velocity = maxVelocity;
-    }
+    birdY -= velocity;
+    velocity -= gravity;
     if (velocity < minVelocity) {
       velocity = minVelocity;
     }
-    acceleration = 0;
 
     if (birdY < 0) {
       birdY = 0;
@@ -126,9 +117,9 @@ void Bird::WaitForRestart() {
     score = 0;
     lv_label_set_text_fmt(points, "%04d", score);
     hit = false;
+    released = true;
     birdY = 100;
     velocity = 0;
-    acceleration = 0;
     pipes[0]->Reset(screenSize);
     pipes[1]->Reset(pipeStartPosition);
   }

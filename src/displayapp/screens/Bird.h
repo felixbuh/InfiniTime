@@ -34,12 +34,11 @@ namespace Pinetime {
         static constexpr uint8_t screenSize = 240;
         static constexpr uint16_t pipeStartPosition = 370;
         static constexpr uint8_t gravity = 1;
-        static constexpr uint8_t maxVelocity = 4;
-        static constexpr int8_t minVelocity = -6;
+        static constexpr uint8_t maxVelocity = 9;
+        static constexpr int8_t minVelocity = -4;
         int8_t velocity = 0;
-        int8_t acceleration = 0;
-        bool addGravity = true;
         bool hit = false;
+        bool released = true;
         bool restarted = false;
         bool restartBtnActive = false;
 

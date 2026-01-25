@@ -21,7 +21,7 @@ private:
 
   bool hit = false;
   uint8_t spacePosition;
-  static constexpr uint8_t spaceSize = 70;
+  static constexpr uint8_t spaceSize = 50;
   static constexpr uint8_t screenSize = 240;
   int16_t pipeTop;
   int16_t pipeBottom;
