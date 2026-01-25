@@ -26,10 +26,13 @@ Pipe::~Pipe() {
 }
 
 bool Pipe::Hits(uint8_t birdX, int16_t birdY, uint8_t birdSize) {
-  if (birdX > pipeX && birdX < (pipeX + pipeW)) {
-    	if (birdY < (pipeTop + birdSize) || birdY > (screenSize - pipeBottom - birdSize)) {
-        hit = true;
-        return true;
+  if (((birdX + birdSize) > pipeX) && (birdX < (pipeX + pipeW))) {
+    int16_t birdTop = birdY;
+    int16_t birdBottom = birdY + birdSize;
+
+    if ((birdTop < pipeTop) || (birdBottom > (screenSize - pipeBottom))) {
+      hit = true;
+      return true;
     }
   }
   return false;
