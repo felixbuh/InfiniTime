@@ -1,0 +1,126 @@
+#include "displayapp/screens/Bird.h"
+#include "displayapp/DisplayApp.h"
+#include "displayapp/LittleVgl.h"
+#include "Symbols.h"
+#include <stdio.h>
+
+using namespace Pinetime::Applications::Screens;
+
+namespace {
+  static void RestartEventHandler(lv_obj_t* obj, lv_event_t event) {
+    auto* bird = static_cast<Bird*>(lv_obj_get_user_data(obj));
+    if (event == LV_EVENT_CLICKED) {
+      bird->RestartBtnEventHandler(obj, event);
+    }
+  }
+}
+
+Bird::Bird() {
+  background = lv_obj_create(lv_scr_act(), nullptr);
+  lv_obj_set_size(background, LV_HOR_RES + 1, LV_VER_RES);
+  lv_obj_set_pos(background, -1, 0);
+  lv_obj_set_style_local_radius(background, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, 0);
+  lv_obj_set_style_local_bg_color(background, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+
+  points = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_font(points, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &jetbrains_mono_42);
+  lv_label_set_text(points, "0000");
+  lv_obj_align(points, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 10);
+
+  bird = lv_obj_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_bg_color(bird, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+  lv_obj_set_style_local_radius(bird, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_RADIUS_CIRCLE);
+  lv_obj_set_size(bird, birdSize, birdSize);
+  lv_obj_set_pos(bird, birdX, birdY);
+
+  pipes[0] = std::make_unique<Pipe>(screenSize);
+  pipes[1] = std::make_unique<Pipe>(pipeStartPosition);
+
+  taskRefresh = lv_task_create(RefreshTaskCallback, 30, LV_TASK_PRIO_MID, this);
+}
+
+Bird::~Bird() {
+  lv_task_del(taskRefresh);
+  lv_obj_clean(lv_scr_act());
+}
+
+void Bird::RestartBtnEventHandler(lv_obj_t* /*obj*/, lv_event_t /*event*/) {
+  restarted = true;
+}
+
+bool Bird::OnTouchEvent(Pinetime::Applications::TouchEvents /*event*/) {
+  released = true;
+  return true;
+}
+
+bool Bird::OnTouchEvent(uint16_t /*x*/, uint16_t /*y*/) {
+  if ((!hit) && released) {
+    velocity = maxVelocity;
+    released = false;
+  }
+  return true;
+}
+
+void Bird::Refresh() {
+  if (!hit) {
+    restarted = false;
+
+    birdY -= velocity;
+    velocity -= gravity;
+    if (velocity < minVelocity) {
+      velocity = minVelocity;
+    }
+
+    if (birdY < 0) {
+      birdY = 0;
+      velocity = 0;
+    }
+    if (birdY > screenSize) {
+      hit = true;
+    }
+
+    lv_obj_set_y(bird, birdY);
+
+    for (int i = 0; i < numberOfPipes; i++) {
+      if (pipes[i]->Hits(birdX, birdY, birdSize)) {
+        hit = true;
+      }
+      pipes[i]->MovePipe();
+      if (pipes[i]->OutOfScreen()) {
+        pipes[i]->Reset(screenSize);
+        score++;
+        lv_label_set_text_fmt(points, "%04d", score);
+      } else {
+        pipes[i]->UpdatePipe();
+      }
+    }
+  } else {
+    WaitForRestart();
+  }
+}
+
+void Bird::WaitForRestart() {
+  if (!restartBtnActive) {
+    restartButton = lv_btn_create(background, nullptr);
+    lv_obj_set_event_cb(restartButton, RestartEventHandler);
+    lv_obj_set_size(restartButton, 50, 50);
+    lv_obj_align(restartButton, nullptr, LV_ALIGN_CENTER, 0, 0);
+    txtRestart = lv_label_create(restartButton, nullptr);
+    lv_label_set_text(txtRestart, Symbols::play);
+    lv_obj_set_user_data(restartButton, this);
+    restartBtnActive = true;
+  }
+  if (restarted) {
+    lv_obj_del(restartButton);
+    lv_obj_del(txtRestart);
+    restartBtnActive = false;
+    score = 0;
+    lv_label_set_text_fmt(points, "%04d", score);
+    hit = false;
+    released = true;
+    birdY = 100;
+    velocity = 0;
+    pipes[0]->Reset(screenSize);
+    pipes[1]->Reset(pipeStartPosition);
+  }
+}

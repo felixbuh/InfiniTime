@@ -28,6 +28,8 @@ namespace Pinetime {
       Motion,
       Calculator,
       Steps,
+      Bird,
+      Snake,
       Dice,
       Weather,
       PassKey,
